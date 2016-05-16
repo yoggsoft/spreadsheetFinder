@@ -51,15 +51,18 @@ var sheetfinder = (function () {
               // Success!
               _data = JSON.parse(request.responseText);
               dispatch (event_keys._init);
+              // return _data;
           } else {
               // We reached our target server, but it returned an error
               console.error("Server returned an error. Check the spreadsheet key.");
           }
       };
-      request.onerror = function() {
-        // Connection error of some sort.
-        console.error("Connection error.");
-      };
+
+
+      // request.onerror = function() {
+      //   // Connection error of some sort.
+      //   console.error("Connection error.");
+      // };
       request.send();
     }
 
@@ -99,12 +102,12 @@ var sheetfinder = (function () {
 
       // public methods
       connect : _connect,
-
+      
       // EventListener methods
       addEventListener : _addEventListener,
       removeEventListener : _removeEventListener,
 
       connected : event_keys._init
-      
+
     }
 })();

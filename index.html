@@ -7,9 +7,10 @@
     <body>
         <script type="text/javascript">
             var sheet_key = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
-            var data = sheetfinder.connect(sheet_key);
+            sheetfinder.connect(sheet_key);
             sheetfinder.addEventListener('connected',function(){
-              console.log('DB logged');
+
+              console.log(sheetfinder.payload);
             });
         </script>
     </body>
