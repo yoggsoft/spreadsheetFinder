@@ -1,14 +1,32 @@
-var sheetfinder = (function(){
+var sheetfinder = (function () {
     // use strict
     'use strict';
     
     var _data = "";
     
-    var isValid = function(val){
-        return (typeof val === String && val !== '' && val !== null) ? 1 : 0;
-    };
+    var instance;
+ 
+    function createInstance() {
+        var _self = new Object();
+        return _self;
+    }
     
-    var find = function(key){
+    function _getInstance(){
+        if (!instance) {
+            instance = createInstance();
+        }
+        return instance;
+    }
+    
+    function isValid (val) {
+        console.log(val);
+        var isString = typeof val === 'string';
+        var notEmpty = val !== '';
+        var notNull = val !== null;
+        return (isString && notEmpty && notNull) ? 1 : 0;
+    }
+    
+    function _find(key){
         if (!isValid(key)){
             console.error('Invalid key.');
         }else{
@@ -30,8 +48,9 @@ var sheetfinder = (function(){
             };
             request.send();
         }
-    };
-    return{
-      pullfrom : find
+    }
+    return {
+        getInstance: _getInstance,
+        find:_find
     };
 })();
