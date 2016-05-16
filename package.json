@@ -1,0 +1,28 @@
+{
+  "name": "sheetfinder",
+  "version": "1.0.0",
+  "description": "Instantiable object that for pulling data from public Google Spreadsheets.",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoggsoft/spreadsheetFinder.git"
+  },
+  "keywords": [
+    "spreadsheet",
+    "google",
+    "drive",
+    "spread",
+    "sheet"
+  ],
+  "author": "Manuel Reyes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoggsoft/spreadsheetFinder/issues"
+  },
+  "homepage": "https://github.com/yoggsoft/spreadsheetFinder#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}
