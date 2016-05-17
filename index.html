@@ -6,11 +6,10 @@
     </head>
     <body>
         <script type="text/javascript">
-            var sheet_key = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
-            sheetfinder.connect(sheet_key);
-            sheetfinder.addEventListener('connected',function(){
-
-              console.log(sheetfinder.payload);
+            var doc = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
+            var db = new sheetfinder(doc);
+            db.addEventListener('connected',function(){
+                // console.log('la posta es:');
             });
         </script>
     </body>
