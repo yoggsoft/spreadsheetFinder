@@ -6,48 +6,24 @@
     var url_prefix = 'https://spreadsheets.google.com/feeds/list/';
     var url_suffix = '/1/public/basic?alt=json';
 
-    function isValid(val) {
-      var isString = typeof val === 'string';
-      var notEmpty = val !== '';
-      var notNull = val !== null;
-      return (isString && notEmpty && notNull);
-    }
-
+    // Constructor
     function sheetfinder(key){
-      this._key;
+      this.key;
       this.url;
       this.events = [];
-      this.requester;
-      this.data = {};
-
-      if(isValid(key)){
-        this._key = key;
+      this.trix = {};
+      this.humbleRequest;
+      
+      if (isValid(key)){
+        this.key = key;
         this.url = url_prefix+this.key+url_suffix;
-        console.log(this.url);
-        this.requester = new requester(this.url);
+        this.humbleRequest = new humbleRequest(this.url);
       }else{
-        console.error('Doc Key is invalid. Make sure that the document is published and the Key is valid');
+        console.error('Doc Key is invalid. Make sure that the document is published and the Key is valid.');
       }
     }
 
-    // HandleRequest method - pulls data from
-    sheetfinder.prototype.connect = function(key) {
-      
-      var request = new XMLHttpRequest();
-      request.open('GET', url, true);
-      request.onreadystatechange = function(){
-        if (request.readyState === 4){
-          if (request.status >= 200 && request.status < 400) {
-            parsedata(JSON.parse(request.responseText));
-          }else{
-            console.error("Server returned an error. Check the spreadsheet key.");
-          }
-        }
-      };
-      request.send(null);
-    }
-
-    var dispatch = function (){
+    sheetfinder.prototype.dispatch = function (key) {
       var dataObj;
   		if (this.events.hasOwnProperty(key)) {
   			dataObj = dataObj || {};
@@ -56,10 +32,6 @@
   				this.events[key][i](dataObj);
   			}
   		}
-    }
-
-    sheetfinder.prototype.dispatch = function (key) {
-      return dispatch.call(key);
   	};
 
     sheetfinder.prototype.addEventListener = function (key,func) {
@@ -79,13 +51,42 @@
   		}
   	};
 
-  	var parsedata = function(data){
-  	  var spreadsheet = {};
-  	  spreadsheet.title = data.feed.title;
+    // humbleRequest constructor
+    function humbleRequest(url) {
+      var req = new XMLHttpRequest();
+      req.open("GET",url,true);
+      req.onreadystatechange = function(){
+        if (req.readyState === 4){
+          console.log('url3: '+url);
+          if (req.status >= 200 && req.status < 400){
+            console.log('success');
+            handleParse(this.response);
+          }else{// Connection established but something broke.
+            console.error('Connection established but something broke.');
+          }
+        }else{// Connection not established.
+          console.error('Connection not established.');
+        }
+      }
+    }
+
+    var handleParse = function(){
+      var spreadhseet = {};
+      spreadsheet.title = data.feed.title;
   	  spreadsheet.author = data.feed.author;
-  	  // spreadsheet.feed = data.feed;
-  	  console.log(spreadsheet);
-  	};
+      console.log(spreadsheet);
+    }
+
+    // validates Doc key
+    var isValid = function(val) {
+      //  checks if String
+      var isString = typeof val === 'string';
+      // checks if empty
+      var notEmpty = val !== '';
+      // checks if null
+      var notNull = val !== null;
+      return (isString && notEmpty && notNull);
+    }
 
   window[NAME] = sheetfinder;
 })(window, document);

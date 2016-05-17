@@ -7,10 +7,10 @@
     <body>
         <script type="text/javascript">
             var doc = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
-            var db = new sheetfinder();
-            db.connect(doc)
+            var db = new sheetfinder(doc);
             db.addEventListener('connected',function(){
                 // console.log('la posta es:');
+                console.log(db.trix);
             });
         </script>
     </body>
