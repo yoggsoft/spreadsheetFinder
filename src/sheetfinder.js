@@ -12,69 +12,71 @@
       this.url;
       this.events = [];
       this.trix = {};
-      this.humbleRequest;
-      
+      this.req;
+
+      this.dispatch = function (key) {
+        var dataObj;
+    		if (this.events.hasOwnProperty(key)) {
+    			dataObj = dataObj || {};
+    			dataObj.currentTarget = sheetfinder;
+    			for (var i in this.events[key]) {
+    				this.events[key][i](dataObj);
+    			}
+    		}
+    	};
+
+      this.addEventListener = function (key,func) {
+    		if (!this.events.hasOwnProperty(key)) {
+    		    this.events[key] = [];
+    		}
+    		this.events[key].push(func);
+    	};
+
+      this.removeEventListener = function (key,func) {
+    		if (this.events.hasOwnProperty(key)) {
+    			for (var i in this.events[key]) {
+    				if (this.events[key][i] === func) {
+    					this.events[key].splice(i, 1);
+    				}
+    			}
+    		}
+    	};
+
+    }
+
+    sheetfinder.prototype.connect = function(key){
       if (isValid(key)){
         this.key = key;
         this.url = url_prefix+this.key+url_suffix;
-        this.humbleRequest = new humbleRequest(this.url);
+        this.humbleRequest(this.url);
       }else{
         console.error('Doc Key is invalid. Make sure that the document is published and the Key is valid.');
       }
     }
 
-    sheetfinder.prototype.dispatch = function (key) {
-      var dataObj;
-  		if (this.events.hasOwnProperty(key)) {
-  			dataObj = dataObj || {};
-  			dataObj.currentTarget = sheetfinder;
-  			for (var i in this.events[key]) {
-  				this.events[key][i](dataObj);
-  			}
-  		}
-  	};
-
-    sheetfinder.prototype.addEventListener = function (key,func) {
-  		if (!this.events.hasOwnProperty(key)) {
-  		    this.events[key] = [];
-  		}
-  		this.events[key].push(func);
-  	};
-
-  	sheetfinder.prototype.removeEventListener = function (key,func) {
-  		if (this.events.hasOwnProperty(key)) {
-  			for (var i in this.events[key]) {
-  				if (this.events[key][i] === func) {
-  					this.events[key].splice(i, 1);
-  				}
-  			}
-  		}
-  	};
-
     // humbleRequest constructor
-    function humbleRequest(url) {
+    sheetfinder.prototype.humbleRequest = function(url) {
       var req = new XMLHttpRequest();
       req.open("GET",url,true);
       req.onreadystatechange = function(){
         if (req.readyState === 4){
-          console.log('url3: '+url);
           if (req.status >= 200 && req.status < 400){
-            console.log('success');
-            handleParse(this.response);
+            handleParse(req.responseText);
           }else{// Connection established but something broke.
             console.error('Connection established but something broke.');
           }
-        }else{// Connection not established.
-          console.error('Connection not established.');
         }
       }
+      req.send();
     }
 
-    var handleParse = function(){
-      var spreadhseet = {};
+    var handleParse = function(data){
+      dispatch('connect');
+      var spreadsheet = {};
       spreadsheet.title = data.feed.title;
   	  spreadsheet.author = data.feed.author;
-      console.log(spreadsheet);
+
+      return spreadsheet;
     }
 
     // validates Doc key
