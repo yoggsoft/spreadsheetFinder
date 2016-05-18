@@ -6,80 +6,58 @@
     var url_prefix = 'https://spreadsheets.google.com/feeds/list/';
     var url_suffix = '/1/public/basic?alt=json';
 
-    // Constructor
-    function sheetfinder(key){
+    /**
+     * Represents a sheetfinder object to be used as DB.
+     * @constructor
+     */
+    function sheetfinder(){
       this.key;
       this.url;
-      this.events = [];
       this.trix = {};
-      this.req;
-
-      this.dispatch = function (key) {
-        var dataObj;
-    		if (this.events.hasOwnProperty(key)) {
-    			dataObj = dataObj || {};
-    			dataObj.currentTarget = sheetfinder;
-    			for (var i in this.events[key]) {
-    				this.events[key][i](dataObj);
-    			}
-    		}
-    	};
-
-      this.addEventListener = function (key,func) {
-    		if (!this.events.hasOwnProperty(key)) {
-    		    this.events[key] = [];
-    		}
-    		this.events[key].push(func);
-    	};
-
-      this.removeEventListener = function (key,func) {
-    		if (this.events.hasOwnProperty(key)) {
-    			for (var i in this.events[key]) {
-    				if (this.events[key][i] === func) {
-    					this.events[key].splice(i, 1);
-    				}
-    			}
-    		}
-    	};
-
     }
-
-    sheetfinder.prototype.connect = function(key){
+    
+    /** SHEETFINDER CONNECT
+     * Connects sheetfinder with spreadsheet and returns its content to DOM
+     * @param {String} key - the public spreadsheet key.
+     * @returns {json} callback - executes when request succeeds. 
+     */
+    sheetfinder.prototype.connect = function(key,callback){
       if (isValid(key)){
         this.key = key;
         this.url = url_prefix+this.key+url_suffix;
-        this.humbleRequest(this.url);
+      
+        // Ajax call
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET",this.url,true);
+        
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState === 4){
+            if(xhr.status >= 200 && xhr.status < 400){
+              if(callback){
+                callback(xhr.responseText);
+              }
+            }else{
+              console.error('Connection established but something broke.');
+            }
+          }
+        };
+        xhr.send();
       }else{
         console.error('Doc Key is invalid. Make sure that the document is published and the Key is valid.');
       }
-    }
+    };
 
-    // humbleRequest constructor
-    sheetfinder.prototype.humbleRequest = function(url) {
-      var req = new XMLHttpRequest();
-      req.open("GET",url,true);
-      req.onreadystatechange = function(){
-        if (req.readyState === 4){
-          if (req.status >= 200 && req.status < 400){
-            handleParse(req.responseText);
-          }else{// Connection established but something broke.
-            console.error('Connection established but something broke.');
-          }
-        }
-      }
-      req.send();
-    }
+    // var handleParse = function(data){
+    //   var spreadsheet = {};
+    //   spreadsheet.title = data.feed.title;
+  	 // spreadsheet.author = data.feed.author;
+    //   return spreadsheet;
+    // }
 
-    var handleParse = function(data){
-      dispatch('connect');
-      var spreadsheet = {};
-      spreadsheet.title = data.feed.title;
-  	  spreadsheet.author = data.feed.author;
-
-      return spreadsheet;
-    }
-
-    // validates Doc key
+    /** IS VALID
+     * Returns true if public document key is valid
+     * @param {String} key - the public spreadsheet key. 
+     */
     var isValid = function(val) {
       //  checks if String
       var isString = typeof val === 'string';
@@ -88,7 +66,7 @@
       // checks if null
       var notNull = val !== null;
       return (isString && notEmpty && notNull);
-    }
+    };
 
   window[NAME] = sheetfinder;
 })(window, document);

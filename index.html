@@ -6,13 +6,15 @@
     </head>
     <body>
         <script type="text/javascript">
-            var doc = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
+            //var doc = "1Aw2dAC_A_M8DOVnt9uFSaQJqXelsGn2eYFQUXE-LpsA";
+            var doc = "1Wl3Ad_Y_izZM8J5UizPbAMuOZGpb2FzAZfbAJ-aU2Tc";
+            
             var db = new sheetfinder();
-            db.connect(doc);
-            db.addEventListener('connected',function(){
-                // console.log('la posta es:');
-                // console.log(db.trix);
-            });
+            function chota(e){
+                console.log(e);
+            }
+            db.connect(doc,chota);
+            
         </script>
     </body>
 </html>
