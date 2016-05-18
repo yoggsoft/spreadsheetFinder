@@ -47,13 +47,6 @@
       }
     };
 
-    // var handleParse = function(data){
-    //   var spreadsheet = {};
-    //   spreadsheet.title = data.feed.title;
-  	 // spreadsheet.author = data.feed.author;
-    //   return spreadsheet;
-    // }
-
     /** IS VALID
      * Returns true if public document key is valid
      * @param {String} key - the public spreadsheet key. 
